@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merch — Inverness Coffee House</title>
+  <meta name="description" content="Rep the Inverness Coffee House. Shop tees and gear from our official merch collection.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&family=Dancing+Script:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            espresso: '#2C1810',
+            roast:    '#4A2C17',
+            caramel:  '#C8833A',
+            honey:    '#E6A84F',
+            cream:    '#F5EDD6',
+            latte:    '#EDD5A3',
+            foam:     '#FAF6EE',
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            script:  ['"Dancing Script"', 'cursive'],
+            body:    ['Lato', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Lato', sans-serif; background-color: #FAF6EE; color: #2C1810; }
+
+    .nav-blur {
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0; right: 0;
+      height: 1px;
+      background: #C8833A;
+      transform: scaleX(0);
+      transition: transform 0.2s ease;
+    }
+    .nav-link:hover::after { transform: scaleX(1); }
+    .nav-link.active::after { transform: scaleX(1); }
+
+    /* Product card */
+    .product-card {
+      transition: transform 0.28s ease, box-shadow 0.28s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 22px 44px rgba(44,24,16,0.16);
+    }
+    .product-card:hover .product-img {
+      transform: scale(1.04);
+    }
+    .product-img {
+      transition: transform 0.4s ease;
+    }
+
+    /* Sticky merch CTA button */
+    .shop-btn {
+      transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+    .shop-btn:hover {
+      transform: translateY(-1px);
+    }
+    .shop-btn:active {
+      transform: translateY(0);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { opacity: 0; }
+  </style>
+</head>
+<body class="font-body text-espresso">
+
+  <!-- ═══════════════════════════════════════════════ NAVIGATION ══ -->
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-espresso/90 border-b border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between h-[68px]">
+
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-full bg-caramel flex items-center justify-center shadow-md group-hover:bg-honey transition-colors">
+            <svg class="w-5 h-5 text-espresso" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
+            </svg>
+          </div>
+          <div class="leading-tight hidden sm:block">
+            <div class="font-display text-cream text-base font-semibold">Inverness Coffee House</div>
+            <div class="font-script text-caramel text-xs">Inverness, Florida</div>
+          </div>
+        </a>
+
+        <div class="hidden md:flex items-center gap-7">
+          <a href="index.html#home"  class="nav-link text-cream/80 hover:text-cream text-sm tracking-widest uppercase font-body transition-colors">Home</a>
+          <a href="index.html#menu"  class="nav-link text-cream/80 hover:text-cream text-sm tracking-widest uppercase font-body transition-colors">Menu</a>
+          <a href="merch.html"       class="nav-link active text-caramel text-sm tracking-widest uppercase font-body">Merch</a>
+          <a href="index.html#visit" class="nav-link text-cream/80 hover:text-cream text-sm tracking-widest uppercase font-body transition-colors">Visit</a>
+          <a href="tel:+13524231690" class="ml-2 bg-caramel hover:bg-honey text-espresso text-sm font-bold px-5 py-2 rounded-full transition-colors shadow-sm">
+            (352) 423-1690
+          </a>
+        </div>
+
+        <button id="menuBtn" class="md:hidden text-cream p-1 focus:outline-none" aria-label="Toggle menu">
+          <svg id="iconOpen"  class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg id="iconClose" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden bg-espresso/97 border-t border-white/10 px-5 pb-5 pt-3 space-y-1">
+      <a href="index.html#home"  class="block py-3 text-cream/80 hover:text-caramel text-sm uppercase tracking-widest border-b border-white/5" onclick="closeMobileMenu()">Home</a>
+      <a href="index.html#menu"  class="block py-3 text-cream/80 hover:text-caramel text-sm uppercase tracking-widest border-b border-white/5" onclick="closeMobileMenu()">Menu</a>
+      <a href="merch.html"       class="block py-3 text-caramel font-bold text-sm uppercase tracking-widest border-b border-white/5">Merch</a>
+      <a href="index.html#visit" class="block py-3 text-cream/80 hover:text-caramel text-sm uppercase tracking-widest border-b border-white/5" onclick="closeMobileMenu()">Visit</a>
+      <a href="tel:+13524231690" class="block pt-4 text-caramel font-bold text-lg">(352) 423-1690</a>
+    </div>
+  </nav>
+
+
+  <!-- ══════════════════════════════════════════════ MERCH HERO ══ -->
+  <section class="bg-espresso relative overflow-hidden pt-[68px]">
+    <!-- Decorative rings -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+      <div class="w-[700px] h-[700px] rounded-full border-[50px] border-caramel/5"></div>
+    </div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full border-[30px] border-caramel/6 pointer-events-none"></div>
+
+    <div class="relative max-w-3xl mx-auto text-center px-4 py-20 md:py-28">
+      <p class="font-script text-honey text-2xl mb-3">Represent the 'Ness</p>
+      <h1 class="font-display text-cream font-bold leading-tight mb-5"
+          style="font-size: clamp(2.8rem, 7vw, 5.5rem);">
+        Shop Our Merch
+      </h1>
+      <p class="text-cream/60 text-lg max-w-xl mx-auto mb-8 leading-relaxed">
+        Graphic tees made for coffee lovers and community believers. Wear your pride — every purchase supports our small, family-run shop in Inverness, FL.
+      </p>
+      <div class="flex items-center justify-center gap-2 text-cream/40 text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>Purchases fulfilled through our Shopify store at notyournanassupply.com</span>
+      </div>
+    </div>
+
+    <!-- Wave bottom -->
+    <div style="overflow:hidden; line-height:0; margin-bottom:-1px;">
+      <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:block; width:100%; height:60px;">
+        <path d="M0,30 C320,60 1120,0 1440,30 L1440,60 L0,60 Z" fill="#FAF6EE"/>
+      </svg>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════ PRODUCT GRID ══ -->
+  <section class="bg-foam py-16 px-4">
+    <div class="max-w-6xl mx-auto">
+
+      <!-- Filter / count bar -->
+      <div class="flex items-center justify-between mb-10">
+        <p class="text-roast/60 text-sm">Showing <span class="font-bold text-espresso">6 products</span></p>
+        <a href="https://notyournanassupply.com/collections/inverness-coffee-house"
+           target="_blank" rel="noopener"
+           class="text-caramel hover:text-honey text-sm font-semibold flex items-center gap-1.5 transition-colors">
+          View full store
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
+
+        <!-- ── Product 1: Logo V-Neck Tee ── -->
+        <article class="product-card bg-cream rounded-2xl overflow-hidden border border-latte/50 shadow-sm group fade-in">
+          <a href="https://notyournanassupply.com/products/inverness-coffee-house-logo-v-neck-tee"
+             target="_blank" rel="noopener" class="block overflow-hidden bg-latte/20 aspect-square">
+            <img
+              src="https://notyournanassupply.com/cdn/shop/files/20260423165509-1f13f353-005f-60d6-8126-7afe711b81fb.png"
+              alt="Inverness Coffee House Logo V-Neck Tee"
+              class="product-img w-full h-full object-contain p-4"
+              loading="lazy"
+            >
+          </a>
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <h2 class="font-display font-semibold text-espresso text-lg leading-snug">Logo V-Neck Tee</h2>
+                <p class="text-roast/55 text-sm mt-0.5">Classic V-neck with the ICH logo</p>
+              </div>
+              <span class="font-bold text-caramel text-lg whitespace-nowrap">$24.99</span>
+            </div>
+            <a href="https://notyournanassupply.com/products/inverness-coffee-house-logo-v-neck-tee"
+               target="_blank" rel="noopener"
+               class="shop-btn block w-full text-center bg-espresso hover:bg-caramel text-cream hover:text-espresso font-bold py-3 rounded-xl text-sm tracking-wide transition-colors">
+              Shop Now →
+            </a>
+          </div>
+        </article>
+
+        <!-- ── Product 2: Represent Tee ── -->
+        <article class="product-card bg-cream rounded-2xl overflow-hidden border border-latte/50 shadow-sm group fade-in">
+          <a href="https://notyournanassupply.com/products/inverness-coffee-house-peace-love-and-coffee-tee"
+             target="_blank" rel="noopener" class="block overflow-hidden bg-latte/20 aspect-square">
+            <img
+              src="https://notyournanassupply.com/cdn/shop/files/20260423170356-1f13f366-9def-634c-9a87-baa94ad45521.png"
+              alt="Inverness Coffee House Represent Tee"
+              class="product-img w-full h-full object-contain p-4"
+              loading="lazy"
+            >
+          </a>
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <h2 class="font-display font-semibold text-espresso text-lg leading-snug">Represent Tee</h2>
+                <p class="text-roast/55 text-sm mt-0.5">Show your Inverness pride</p>
+              </div>
+              <span class="font-bold text-caramel text-lg whitespace-nowrap">$24.99</span>
+            </div>
+            <a href="https://notyournanassupply.com/products/inverness-coffee-house-peace-love-and-coffee-tee"
+               target="_blank" rel="noopener"
+               class="shop-btn block w-full text-center bg-espresso hover:bg-caramel text-cream hover:text-espresso font-bold py-3 rounded-xl text-sm tracking-wide transition-colors">
+              Shop Now →
+            </a>
+          </div>
+        </article>
+
+        <!-- ── Product 3: Just Brew It Tee ── -->
+        <article class="product-card bg-cream rounded-2xl overflow-hidden border border-latte/50 shadow-sm group fade-in">
+          <a href="https://notyournanassupply.com/products/inverness-coffee-house-just-brew-it-tee"
+             target="_blank" rel="noopener" class="block overflow-hidden bg-latte/20 aspect-square">
+            <img
+              src="https://notyournanassupply.com/cdn/shop/files/20260408015420-1f132edd-bf0e-68dc-8ad7-3af45809ab5c.png"
+              alt="Inverness Coffee House Just Brew It Tee"
+              class="product-img w-full h-full object-contain p-4"
+              loading="lazy"
+            >
+          </a>
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <h2 class="font-display font-semibold text-espresso text-lg leading-snug">Just Brew It Tee</h2>
+                <p class="text-roast/55 text-sm mt-0.5">Because coffee is non-negotiable</p>
+              </div>
+              <span class="font-bold text-caramel text-lg whitespace-nowrap">$24.99</span>
+            </div>
+            <a href="https://notyournanassupply.com/products/inverness-coffee-house-just-brew-it-tee"
+               target="_blank" rel="noopener"
+               class="shop-btn block w-full text-center bg-espresso hover:bg-caramel text-cream hover:text-espresso font-bold py-3 rounded-xl text-sm tracking-wide transition-colors">
+              Shop Now →
+            </a>
+          </div>
+        </article>
+
+        <!-- ── Product 4: Holy Crepe Tee ── -->
+        <article class="product-card bg-cream rounded-2xl overflow-hidden border border-latte/50 shadow-sm group fade-in">
+          <a href="https://notyournanassupply.com/products/inverness-coffee-house-emotionally-dependent-coffee-house-tee"
+             target="_blank" rel="noopener" class="block overflow-hidden bg-latte/20 aspect-square">
+            <img
+              src="https://notyournanassupply.com/cdn/shop/files/20260423171038-1f13f375-9954-67e2-bc6e-baa94ad45521.png"
+              alt="Inverness Coffee House Holy Crepe Tee"
+              class="product-img w-full h-full object-contain p-4"
+              loading="lazy"
+            >
+          </a>
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <h2 class="font-display font-semibold text-espresso text-lg leading-snug">Holy Crepe Tee</h2>
+                <p class="text-roast/55 text-sm mt-0.5">For the crepe devotees among us</p>
+              </div>
+              <span class="font-bold text-caramel text-lg whitespace-nowrap">$24.99</span>
+            </div>
+            <a href="https://notyournanassupply.com/products/inverness-coffee-house-emotionally-dependent-coffee-house-tee"
+               target="_blank" rel="noopener"
+               class="shop-btn block w-full text-center bg-espresso hover:bg-caramel text-cream hover:text-espresso font-bold py-3 rounded-xl text-sm tracking-wide transition-colors">
+              Shop Now →
+            </a>
+          </div>
+        </article>
+
+        <!-- ── Product 5: Classic Tee ── -->
+        <article class="product-card bg-cream rounded-2xl overflow-hidden border border-latte/50 shadow-sm group fade-in">
+          <a href="https://notyournanassupply.com/products/inverness-coffee-house-classic-tee"
+             target="_blank" rel="noopener" class="block overflow-hidden bg-latte/20 aspect-square">
+            <img
+              src="https://notyournanassupply.com/cdn/shop/files/20260408014603-1f132ecb-38d1-65f6-9e7a-3af48822f59b.png"
+              alt="Inverness Coffee House Classic Tee"
+              class="product-img w-full h-full object-contain p-4"
+              loading="lazy"
+            >
+          </a>
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <h2 class="font-display font-semibold text-espresso text-lg leading-snug">Classic Tee</h2>
+                <p class="text-roast/55 text-sm mt-0.5">Clean, timeless, and unapologetically local</p>
+              </div>
+              <span class="font-bold text-caramel text-lg whitespace-nowrap">$24.99</span>
+            </div>
+            <a href="https://notyournanassupply.com/products/inverness-coffee-house-classic-tee"
+               target="_blank" rel="noopener"
+               class="shop-btn block w-full text-center bg-espresso hover:bg-caramel text-cream hover:text-espresso font-bold py-3 rounded-xl text-sm tracking-wide transition-colors">
+              Shop Now →
+            </a>
+          </div>
+        </article>
+
+        <!-- ── Product 6: Main Logo Tee ── -->
+        <article class="product-card bg-cream rounded-2xl overflow-hidden border border-latte/50 shadow-sm group fade-in">
+          <a href="https://notyournanassupply.com/products/inverness-coffee-house-retro-sunset-t-shirt"
+             target="_blank" rel="noopener" class="block overflow-hidden bg-latte/20 aspect-square">
+            <img
+              src="https://notyournanassupply.com/cdn/shop/files/20260403044142-1f12f176-97c1-629c-87e2-3e97c7b75a08.png"
+              alt="Inverness Coffee House Main Logo Tee"
+              class="product-img w-full h-full object-contain p-4"
+              loading="lazy"
+            >
+          </a>
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <h2 class="font-display font-semibold text-espresso text-lg leading-snug">Main Logo Tee</h2>
+                <p class="text-roast/55 text-sm mt-0.5">The original. The one and only.</p>
+              </div>
+              <span class="font-bold text-caramel text-lg whitespace-nowrap">$24.99</span>
+            </div>
+            <a href="https://notyournanassupply.com/products/inverness-coffee-house-retro-sunset-t-shirt"
+               target="_blank" rel="noopener"
+               class="shop-btn block w-full text-center bg-espresso hover:bg-caramel text-cream hover:text-espresso font-bold py-3 rounded-xl text-sm tracking-wide transition-colors">
+              Shop Now →
+            </a>
+          </div>
+        </article>
+
+      </div><!-- /grid -->
+
+      <!-- Shop all CTA -->
+      <div class="text-center mt-14">
+        <p class="text-roast/50 text-sm mb-5">All orders are fulfilled through our partner store</p>
+        <a href="https://notyournanassupply.com/collections/inverness-coffee-house"
+           target="_blank" rel="noopener"
+           class="shop-btn inline-flex items-center gap-2.5 bg-caramel hover:bg-honey text-espresso font-bold px-10 py-4 rounded-full text-base tracking-wide transition-colors shadow-lg">
+          View Full Collection on Shopify
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════ BACK-TO-SITE CTA ══ -->
+  <section class="bg-cream border-t border-latte/40 py-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-espresso rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
+          <div class="w-[500px] h-[500px] rounded-full border-[40px] border-cream"></div>
+        </div>
+        <p class="font-script text-honey text-xl mb-3 relative">While you're here…</p>
+        <h3 class="font-display text-cream text-3xl md:text-4xl font-bold mb-4 relative leading-tight">
+          Come visit us in Inverness
+        </h3>
+        <p class="text-cream/60 mb-8 max-w-md mx-auto relative">
+          Mon–Fri 7am–6pm · Sat 8am–2pm<br>
+          3806 E. Gulf to Lake Hwy, Inverness, FL
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center relative">
+          <a href="index.html#visit" class="bg-caramel hover:bg-honey text-espresso font-bold px-8 py-3.5 rounded-full transition-colors">
+            Get Directions
+          </a>
+          <a href="index.html#menu" class="border-2 border-cream/40 hover:border-cream text-cream font-bold px-8 py-3.5 rounded-full hover:bg-cream/10 transition-colors">
+            See the Menu
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════ FOOTER ══ -->
+  <footer class="bg-espresso text-cream/60 pt-14 pb-8 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-10 mb-10">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-9 h-9 rounded-full bg-caramel flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-espresso" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
+              </svg>
+            </div>
+            <span class="font-display text-cream font-bold text-lg">Inverness Coffee House</span>
+          </div>
+          <p class="text-sm leading-relaxed">Building relationships, one cup at a time.</p>
+          <div class="flex gap-3 mt-5">
+            <a href="https://www.facebook.com/profile.php?id=100085562657770" target="_blank" rel="noopener" aria-label="Facebook"
+               class="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center hover:bg-caramel hover:text-espresso text-cream/60 transition-colors">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/invernesscoffeehouse/" target="_blank" rel="noopener" aria-label="Instagram"
+               class="w-9 h-9 bg-white/8 rounded-full flex items-center justify-center hover:bg-caramel hover:text-espresso text-cream/60 transition-colors">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-display text-cream font-bold text-base mb-4 uppercase tracking-wide text-sm">Quick Links</h4>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html#menu"   class="hover:text-caramel transition-colors">Menu</a></li>
+            <li><a href="merch.html"        class="text-caramel font-semibold">Merch</a></li>
+            <li><a href="index.html#visit"  class="hover:text-caramel transition-colors">Visit Us</a></li>
+            <li><a href="tel:+13524231690"  class="hover:text-caramel transition-colors">(352) 423-1690</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-display text-cream font-bold text-base mb-4 uppercase tracking-wide text-sm">Hours</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between gap-4"><span>Mon – Fri</span><span class="text-cream/80">7:00 AM – 6:00 PM</span></div>
+            <div class="flex justify-between gap-4"><span>Saturday</span><span class="text-cream/80">8:00 AM – 2:00 PM</span></div>
+            <div class="flex justify-between gap-4"><span>Sunday</span><span class="text-cream/40 italic">Closed</span></div>
+          </div>
+          <p class="mt-5 text-sm text-cream/60">3806 E. Gulf to Lake Hwy<br>Inverness, FL 34453</p>
+        </div>
+      </div>
+
+      <div class="border-t border-white/10 pt-6 text-center">
+        <p class="text-xs text-cream/30">
+          © 2024 Inverness Coffee House · 3806 E. Gulf to Lake Hwy, Inverness, FL · (352) 423-1690
+        </p>
+      </div>
+    </div>
+  </footer>
+
+
+  <script>
+    /* Mobile nav */
+    const menuBtn    = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const iconOpen   = document.getElementById('iconOpen');
+    const iconClose  = document.getElementById('iconClose');
+
+    menuBtn.addEventListener('click', () => {
+      const hidden = mobileMenu.classList.toggle('hidden');
+      iconOpen.classList.toggle('hidden', !hidden);
+      iconClose.classList.toggle('hidden', hidden);
+    });
+
+    function closeMobileMenu() {
+      mobileMenu.classList.add('hidden');
+      iconOpen.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+        closeMobileMenu();
+      }
+    });
+
+    /* Staggered fade-in for product cards */
+    const cards = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.style.animation = 'fadeUp 0.55s ease forwards';
+            entry.target.style.animationDelay = '0s';
+          }, Array.from(cards).indexOf(entry.target) * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    cards.forEach(card => observer.observe(card));
+  </script>
+
+  <style>
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</body>
+</html>
